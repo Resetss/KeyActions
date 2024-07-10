@@ -1,0 +1,79 @@
+/* styles/dark.css */
+
+/* General application styles */
+QWidget {
+    background-color: #2b2b2b;
+    color: #ffffff;
+}
+
+/* Tab widget styles */
+QTabWidget::pane {
+    border: 1px solid #444444;
+    background: #2b2b2b;
+}
+
+/* Tab bar styles */
+QTabBar::tab {
+    background: #3c3c3c;
+    border: 1px solid #444444;
+    padding: 10px;
+    margin: 2px;
+    color: #ffffff;
+}
+
+QTabBar::tab:selected {
+    background: #555555;
+}
+
+QTabBar::tab:hover {
+    background: #4a4a4a;
+}
+
+/* Button styles */
+QPushButton {
+    background-color: #3c3c3c;
+    border: 1px solid #444444;
+    padding: 5px;
+    color: #ffffff;
+}
+
+QPushButton:hover {
+    background-color: #4a4a4a;
+}
+
+QPushButton:pressed {
+    background-color: #555555;
+}
+
+/* Line edit styles */
+QLineEdit {
+    background-color: #3c3c3c;
+    border: 1px solid #444444;
+    padding: 5px;
+    color: #ffffff;
+}
+
+/* Text edit styles */
+QTextEdit {
+    background-color: #3c3c3c;
+    border: 1px solid #444444;
+    color: #ffffff;
+}
+
+/* Spin box styles */
+QSpinBox {
+    background-color: #3c3c3c;
+    border: 1px solid #444444;
+    padding: 5px;
+    color: #ffffff;
+}
+
+/* Checkbox styles */
+QCheckBox {
+    color: #ffffff;
+}
+
+/* Label styles */
+QLabel {
+    color: #ffffff;
+}
