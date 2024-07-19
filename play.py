@@ -11,11 +11,12 @@ from pynput import keyboard
 class EventPlayer(QThread):
     event_signal = pyqtSignal(str)
 
-    def __init__(self, name_of_recording, number_of_plays, delay=0, recordings_path='data'):
+    def __init__(self, name_of_recording, number_of_plays, delay=0, intermediate_delay=0, recordings_path='data'):
         super().__init__()
         self.name_of_recording = name_of_recording
         self.number_of_plays = number_of_plays
         self.delay = delay
+        self.intermediate_delay = intermediate_delay 
         self.recordings_path = recordings_path
         self._stop_flag = False
 
@@ -45,6 +46,12 @@ class EventPlayer(QThread):
         for current_play in range(self.number_of_plays):
             if self._stop_flag:
                 break
+
+            # Intermediate Delay 
+            if self.intermediate_delay > 0:
+                for i in range(self.intermediate_delay, 0, -1):
+                    self.event_signal.emit(f"Next play in {i} seconds...")
+                    time.sleep(1)
 
             self.event_signal.emit(f"Play {current_play} out of {self.number_of_plays}")
 
