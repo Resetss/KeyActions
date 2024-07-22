@@ -47,13 +47,7 @@ class EventPlayer(QThread):
             if self._stop_flag:
                 break
 
-            # Intermediate Delay 
-            if self.intermediate_delay > 0:
-                for i in range(self.intermediate_delay, 0, -1):
-                    self.event_signal.emit(f"Next play in {i} seconds...")
-                    time.sleep(1)
-
-            self.event_signal.emit(f"Play {current_play} out of {self.number_of_plays}")
+            self.event_signal.emit(f"Play {current_play + 1} out of {self.number_of_plays}")
 
             for index, obj in enumerate(data):
                 action, _time = obj['action'], obj['_time']
@@ -90,6 +84,12 @@ class EventPlayer(QThread):
                         horizontal_direction, vertical_direction = obj['horizontal_direction'], obj['vertical_direction']
                         mouse.scroll(horizontal_direction, vertical_direction)
                     time.sleep(pause_time)
+
+            # Intermediate Delay 
+            if self.intermediate_delay > 0 and current_play + 1 != self.number_of_plays:
+                for i in range(self.intermediate_delay, 0, -1):
+                    self.event_signal.emit(f"Next play in {i} seconds...")
+                    time.sleep(1)
 
         self.event_signal.emit("End Playing")
     
