@@ -10,10 +10,8 @@ from pynput import keyboard
 
 class EventPlayer(QThread):
     
-    # Stephen: Should Event Signals be here? 
     event_signal = pyqtSignal(str)
-
-    # Should take in a list of recordings for sequence feature. 
+     
     def __init__(self, recordings_list, number_of_plays, initial_delay=0, intermediate_delay=0, recordings_path='data'):
         super().__init__()
 
@@ -30,17 +28,10 @@ class EventPlayer(QThread):
         self._stop_flag = False
 
     def run(self):
-        # TODO Load settings for key input here.    
-
-
         special_keys = {"Key.shift": Key.shift, "Key.tab": Key.tab, "Key.caps_lock": Key.caps_lock, "Key.ctrl": Key.ctrl, "Key.alt": Key.alt, "Key.cmd": Key.cmd, "Key.cmd_r": Key.cmd_r, "Key.alt_r": Key.alt_r, "Key.ctrl_l": Key.ctrl_l, "Key.ctrl_r": Key.ctrl_r, "Key.shift_r": Key.shift_r, "Key.enter": Key.enter, "Key.backspace": Key.backspace, "Key.f19": Key.f19, "Key.f18": Key.f18, "Key.f17": Key.f17, "Key.f16": Key.f16, "Key.f15": Key.f15, "Key.f14": Key.f14, "Key.f13": Key.f13, "Key.media_volume_up": Key.media_volume_up, "Key.media_volume_down": Key.media_volume_down, "Key.media_volume_mute": Key.media_volume_mute, "Key.media_play_pause": Key.media_play_pause, "Key.f6": Key.f6, "Key.f5": Key.f5, "Key.right": Key.right, "Key.down": Key.down, "Key.left": Key.left, "Key.up": Key.up, "Key.page_up": Key.page_up, "Key.page_down": Key.page_down, "Key.home": Key.home, "Key.end": Key.end, "Key.delete": Key.delete, "Key.space": Key.space}
 
         mouse = MouseController()
         keyboardController = KeyboardController()
-
-        # Event Listener for stopping play
-        self.keyboard_listener = keyboard.Listener(on_press=self.on_press)
-        self.keyboard_listener.start()        
 
         # Start of play 
         for recording_item in self.recording_data:
@@ -54,12 +45,14 @@ class EventPlayer(QThread):
             self.event_signal.emit(f"Start Playing: {recording_name}")
 
             for current_play in range(self.number_of_plays):
-                if self._stop_flag:
-                    break
 
                 self.event_signal.emit(f"Play {current_play + 1} out of {self.number_of_plays}")
 
                 for index, obj in enumerate(data):
+
+                    if self._stop_flag:
+                        return
+
                     action, _time = obj['action'], obj['time']
                     try:
                         next_movement = data[index+1]['time']
@@ -95,7 +88,6 @@ class EventPlayer(QThread):
                             mouse.scroll(horizontal_direction, vertical_direction)
                         time.sleep(pause_time)
 
-
                 # Intermediate Delay 
                 if self.intermediate_delay > 0 and current_play + 1 != self.number_of_plays:
                     for i in range(self.intermediate_delay, 0, -1):
@@ -116,8 +108,3 @@ class EventPlayer(QThread):
 
     def stop(self):
         self._stop_flag = True
-        
-    def on_press(self, key):
-        if key == keyboard.Key.esc:
-            self.stop()
-            return False

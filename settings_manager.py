@@ -4,18 +4,28 @@ import json
 class SettingsManager:
     SETTINGS_FILE_PATH = os.path.join(os.path.expanduser('~'), 'Documents', 'LuminaAction', 'settings.json')
     RECORDINGS_FILE_PATH = os.path.join(os.path.expanduser('~'), 'Documents', 'LuminaAction', 'recordings')
+    
     START_RECORDING = "F9"
     STOP_RECORDING = "F10"
     START_PLAYING = "F11"
     STOP_PLAYING = "F12"
+
+    INITIAL_DELAY = {"start": 0, "end": 60}
+    INTERMEDIATE_DELAY = {"start": 0, "end": 300}
+
+    NUMBER_OF_PLAYS = {"start": 1, "end": 100} 
+
     DEFAULT_WINDOW_SIZE = {"width": 600, "height": 400}
 
     DEFAULT_SETTINGS = {
         "recordings_location": RECORDINGS_FILE_PATH,
         "start_recording": START_RECORDING,
         "stop_recording": STOP_RECORDING,
-        "start_playing": START_PLAYING, 
+        "start_playing": START_PLAYING,
         "stop_playing": STOP_PLAYING,
+        "initial_delay": INITIAL_DELAY,
+        "intermediate_delay": INTERMEDIATE_DELAY, 
+        "number_of_plays": NUMBER_OF_PLAYS,
         "last_window_size": DEFAULT_WINDOW_SIZE  
     }
 
