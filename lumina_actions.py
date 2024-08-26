@@ -10,19 +10,33 @@ from PyQt5.QtCore import QTimer
 from record_tab import RecordTab
 from play_tab import PlayTab
 from manage_tab import ManageTab
-from dev_notes import DevNotes
+from sequence_tab import SequenceTab 
 
-class Window(QWidget):
+class LuminaActions(QWidget):
     def __init__(self):
         super().__init__()
+
+        # load settings
+        documents_path = os.path.join(os.path.expanduser('~'), 'Documents')
+        appdata_path = os.path.join(documents_path, 'LuminaAction')
+        self.recordings_path = os.path.join(appdata_path, 'recordings')
+        
+        # Move the settings to appdata in a folder called Lumina actions
+        self.settings_path = os.path.join(appdata_path, 'settings.json')
+
+        # Check if settings exist. 
+        # if not create a default settings at the location
+        # default settings should include start recording button end recording button
+        # specify a recording folder.  
+        # default recordings should go to app data as well not just documents
+        # Please move them there 
+        # Please add another file called specificaitons that saves the last window size on app closure
+
 
         self.setWindowTitle("Lumina Actions")
         self.setGeometry(100, 100, 600, 400)
 
-        documents_path = os.path.join(os.path.expanduser('~'), 'Documents')
-        appdata_path = os.path.join(documents_path, 'LuminaAction')
-        self.recordings_path = os.path.join(appdata_path, 'recordings')
-        self.settings_path = os.path.join(appdata_path, 'settings.json')
+
 
         # Ensure directories exist
         os.makedirs(self.recordings_path, exist_ok=True)
@@ -39,11 +53,13 @@ class Window(QWidget):
         self.record_tab = RecordTab()
         self.play_tab = PlayTab()
         self.manage_tab = ManageTab()
+        self.sequence_tab = SequenceTab()
         self.dev_notes = DevNotes()
 
         self.tabs.addTab(self.record_tab, "Record")
         self.tabs.addTab(self.play_tab, "Play")
         self.tabs.addTab(self.manage_tab, "Manage Recordings")
+        self.tabs.addTab(self.sequence_tab, "Sequences")
         self.tabs.addTab(self.dev_notes, "Dev Notes")
 
         layout.addWidget(self.tabs)
@@ -64,7 +80,6 @@ class Window(QWidget):
             self.manage_tab.refresh_recordings_list()
             
     def apply_dark_theme(self):
-        print("Applied")
         with open('styles/dark.css', 'r') as file:
             dark_stylesheet = file.read()
         self.setStyleSheet(dark_stylesheet)

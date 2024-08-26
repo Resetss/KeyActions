@@ -2,11 +2,11 @@ import sys
 
 import time
 
-from window import Window
+from lumina_actions import LuminaActions
 from PyQt5.QtWidgets import QApplication
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = Window()
-    window.show()
+    lumina_actions = LuminaActions()
+    lumina_actions.show()
     sys.exit(app.exec_())

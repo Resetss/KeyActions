@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QSpinBox
 from PyQt5.QtWidgets import QTextEdit
 from PyQt5.QtWidgets import QListWidget
 
-from play import EventPlayer
+from event_player import EventPlayer
 
 class PlayTab(QWidget):
     def __init__(self):
@@ -23,7 +23,6 @@ class PlayTab(QWidget):
 
         main_layout = QHBoxLayout()
 
-        # Left column (buttons)
         button_layout = QVBoxLayout()
         self.recordings_list = QListWidget()
         self.refresh_recordings_list()
@@ -80,10 +79,11 @@ class PlayTab(QWidget):
         delay = self.delay_input.value()
         intermediate_delay = self.intermediate_delay_input.value()
         if selected_item:
-            filename = selected_item.text()
+            recordings_list = []
+            recordings_list.append(selected_item.text())
             number_of_plays = self.number_of_plays_input.value()
 
-            self.event_player = EventPlayer(filename, number_of_plays, delay, intermediate_delay, self.recordings_path)
+            self.event_player = EventPlayer(recordings_list, number_of_plays, delay, intermediate_delay, self.recordings_path)
             self.event_player.event_signal.connect(self.update_console)
             self.event_player.finished.connect(self.end_recording)
             self.event_player.start()
