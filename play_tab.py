@@ -11,15 +11,13 @@ from PyQt5.QtWidgets import QListWidget
 
 from event_player import EventPlayer
 
+from settings_manager import SettingsManager 
+
 class PlayTab(QWidget):
     def __init__(self):
         super().__init__()
 
-        # TODO Move hardcodded recording path as a parameter connected 
-        # with settings tab
-        documents_path = os.path.join(os.path.expanduser('~'), 'Documents')
-        appdata_path = os.path.join(documents_path, 'LuminaAction')
-        self.recordings_path = os.path.join(appdata_path, 'recordings')
+        self.recordings_path = SettingsManager.get_recordings_folder() 
 
         main_layout = QHBoxLayout()
 
@@ -71,7 +69,6 @@ class PlayTab(QWidget):
 
         self.setLayout(main_layout)
 
-
     def play_recording(self):
         self.play_button.setEnabled(False)
 
@@ -93,6 +90,7 @@ class PlayTab(QWidget):
 
     def refresh_recordings_list(self):
         self.recordings_list.clear()
+        self.recordings_path = SettingsManager.get_recordings_folder() 
         recordings = [filename for filename in os.listdir(self.recordings_path) if filename.endswith('.json')]
         self.recordings_list.addItems(recordings)
 
