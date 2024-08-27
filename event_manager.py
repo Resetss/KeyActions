@@ -80,3 +80,8 @@ class EventManager:
     @classmethod
     def is_button_valid(cls, button_name):
         return button_name in cls.BUTTONS
+    
+    @classmethod
+    def is_special_key(cls, key_name):
+        """Return True if the key is a special key, False otherwise."""
+        return key_name in cls.SPECIAL_KEYS

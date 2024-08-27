@@ -1,14 +1,16 @@
 import os
 import json
 
+from event_manager import EventManager
+
 class SettingsManager:
     SETTINGS_FILE_PATH = os.path.join(os.path.expanduser('~'), 'Documents', 'LuminaAction', 'settings.json')
     RECORDINGS_FILE_PATH = os.path.join(os.path.expanduser('~'), 'Documents', 'LuminaAction', 'recordings')
     
-    START_RECORDING = "F9"
-    STOP_RECORDING = "F10"
-    START_PLAYING = "F11"
-    STOP_PLAYING = "F12"
+    START_RECORDING = "Key.f9"
+    STOP_RECORDING = "Key.f10"
+    START_PLAYING = "Key.f11"
+    STOP_PLAYING = "Key.f12"
 
     INITIAL_DELAY = {"start": 0, "end": 60}
     INTERMEDIATE_DELAY = {"start": 0, "end": 300}
@@ -77,3 +79,31 @@ class SettingsManager:
     def get_recordings_folder(cls):
         """Get the recordings folder path."""
         return cls.get_setting('recordings_location')
+
+    @classmethod
+    def validate_settings(cls, settings):
+        """Validate settings before saving."""
+        errors = []
+        for hotkey in ['start_recording', 'stop_recording', 'start_playing', 'stop_playing']:
+            if not EventManager.is_key_valid(settings[hotkey]):
+                errors.append(f"Invalid hotkey: {settings[hotkey]}")
+
+        recordings_location = settings.get('recordings_location', cls.RECORDINGS_FILE_PATH)
+        if not cls.is_directory_writable(recordings_location):
+            errors.append(f"Cannot write to the recordings folder: {recordings_location}")
+
+        return errors
+
+    @staticmethod
+    def is_directory_writable(path):
+        """Check if a directory is writable and can be created if it does not exist."""
+        try:
+            if not os.path.exists(path):
+                os.makedirs(path, exist_ok=True)
+            test_file = os.path.join(path, '.test_write')
+            with open(test_file, 'w') as f:
+                f.write('test')
+            os.remove(test_file)
+            return True
+        except Exception:
+            return False
