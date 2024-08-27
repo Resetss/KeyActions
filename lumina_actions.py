@@ -51,6 +51,7 @@ class LuminaActions(QWidget):
             self.stylesheet_timer.start(1000)
 
         self.register_hotkeys()
+        self.register_listner() 
 
     def register_hotkeys(self):
         self.start_recording_key = SettingsManager.get_setting("start_recording").lower()
@@ -58,7 +59,7 @@ class LuminaActions(QWidget):
         self.start_playing_key = SettingsManager.get_setting("start_playing").lower()
         self.stop_playing_key = SettingsManager.get_setting("stop_playing").lower()
 
-    def register_global_hotkeys(self):
+    def register_listner(self): 
         self.listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
         self.listener.start()
 
@@ -87,7 +88,7 @@ class LuminaActions(QWidget):
                 self.record_tab.start_recording()
 
     def on_tab_changed(self, index):
-        self.register_global_hotkeys()
+        self.register_hotkeys()
 
         if self.tabs.tabText(index) == "Play":
             self.play_tab.refresh_recordings_list()
@@ -100,6 +101,10 @@ class LuminaActions(QWidget):
         self.setStyleSheet(dark_stylesheet)
 
     def closeEvent(self, event):
+        if self.listener is not None:
+            self.listener.stop()
+            self.listener = None
+
         window_size = self.size()
         SettingsManager.set_setting('last_window_size', {"width": window_size.width(), "height": window_size.height()})
         super().closeEvent(event)

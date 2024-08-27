@@ -18,9 +18,9 @@ class PlayTab(QWidget):
         self.refresh_recordings_list()
 
         initial_delay = SettingsManager.get_setting("initial_delay")
-        self.delay_input = QSpinBox()
-        self.delay_input.setMinimum(initial_delay["start"])
-        self.delay_input.setMaximum(initial_delay["end"])
+        self.initial_delay_input = QSpinBox()
+        self.initial_delay_input.setMinimum(initial_delay["start"])
+        self.initial_delay_input.setMaximum(initial_delay["end"])
 
         intermediate_delay = SettingsManager.get_setting("intermediate_delay")
         self.intermediate_delay_input = QSpinBox()
@@ -38,7 +38,7 @@ class PlayTab(QWidget):
         left_column_layout = QVBoxLayout()
         left_column_layout.addWidget(self.recordings_list)
         left_column_layout.addWidget(QLabel("Delay (seconds):"))
-        left_column_layout.addWidget(self.delay_input)
+        left_column_layout.addWidget(self.initial_delay_input)
         left_column_layout.addWidget(QLabel("Delay Between Plays (seconds):"))
         left_column_layout.addWidget(self.intermediate_delay_input)
         left_column_layout.addWidget(QLabel("Number of plays:"))
@@ -72,7 +72,7 @@ class PlayTab(QWidget):
         if selected_item:
             recordings_list = [selected_item.text()]
             number_of_plays = self.number_of_plays_input.value()
-            inital_delay = self.delay_input.value()
+            inital_delay = self.initial_delay_input.value()
             intermediate_delay = self.intermediate_delay_input.value()
 
             self.event_player = EventPlayer(recordings_list, number_of_plays, inital_delay, intermediate_delay, self.recordings_path)

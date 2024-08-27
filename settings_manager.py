@@ -36,7 +36,6 @@ class SettingsManager:
             os.makedirs(os.path.dirname(cls.SETTINGS_FILE_PATH), exist_ok=True)
             cls.save_settings(cls.DEFAULT_SETTINGS)
         else:
-            # Ensure all default settings are present
             settings = cls.load_settings()
             for key, value in cls.DEFAULT_SETTINGS.items():
                 if key not in settings:
