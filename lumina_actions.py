@@ -1,8 +1,7 @@
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWidgets import QVBoxLayout
-from PyQt5.QtWidgets import QTabWidget
-
+# LuminaActions class
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTabWidget
 from PyQt5.QtCore import QTimer
+from pynput import keyboard
 
 from settings_manager import SettingsManager
 
@@ -10,15 +9,16 @@ from record_tab import RecordTab
 from play_tab import PlayTab
 from manage_tab import ManageTab
 from sequence_tab import SequenceTab
-from settings_tab import SettingsTab 
+from settings_tab import SettingsTab
+
 
 class LuminaActions(QWidget):
     def __init__(self):
         super().__init__()
 
         SettingsManager.initialize_settings()
-         
-        dimensions = SettingsManager.get_window_sizes() 
+
+        dimensions = SettingsManager.get_window_sizes()
         self.setWindowTitle("Lumina Actions")
         self.setGeometry(100, 100, dimensions["width"], dimensions["height"])
 
@@ -51,6 +51,27 @@ class LuminaActions(QWidget):
             self.stylesheet_timer = QTimer(self)
             self.stylesheet_timer.timeout.connect(self.apply_dark_theme)
             self.stylesheet_timer.start(1000)
+
+        # Register global hotkeys
+        self.register_global_hotkeys()
+
+    def register_global_hotkeys(self):
+        self.start_playing_key = SettingsManager.get_setting("start_playing").lower()
+        self.stop_playing_key = SettingsManager.get_setting("stop_playing").lower()
+
+        self.listener = keyboard.Listener(on_press=self.on_press)
+        self.listener.start()
+
+    def on_press(self, key):
+        _key = str(key).replace("Key.", "")
+        current_tab_index = self.tabs.currentIndex()
+        current_tab_name = self.tabs.tabText(current_tab_index)
+
+        if current_tab_name == "Play":
+            if _key == self.start_playing_key:
+                self.play_tab.play_recording()
+            elif _key == self.stop_playing_key:
+                self.play_tab.stop_playing()
 
     def on_tab_changed(self, index):
         if self.tabs.tabText(index) == "Play":

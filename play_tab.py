@@ -1,5 +1,5 @@
+# PlayTab class
 import os
-from pynput import keyboard
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSpinBox, QTextEdit, QListWidget
 from PyQt5.QtCore import Qt
@@ -61,28 +61,7 @@ class PlayTab(QWidget):
 
         self.setLayout(play_tab_layout)
 
-        self.register_global_hotkeys()
-
         self.playing = False 
-
-    def register_global_hotkeys(self):
-        self.start_playing_key = SettingsManager.get_setting("start_playing").lower()
-        self.stop_playing_key = SettingsManager.get_setting("stop_playing").lower()
-        
-        self.listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
-        self.listener.start()
-
-    def on_press(self, key):
-
-        _key = str(key).replace("Key.", "")
-        if _key == self.start_playing_key:
-            self.play_recording()
-        elif _key == self.stop_playing_key:
-            if self.playing:
-                self.stop_playing()
-
-    def on_release(self, key):
-        pass
 
     def play_recording(self):
         self.play_button.setEnabled(False)
@@ -106,8 +85,8 @@ class PlayTab(QWidget):
         self.playing = False 
 
     def stop_playing(self):
-        print("Stopped")
         self.event_player.stop()
+        self.playing = False 
 
     def refresh_recordings_list(self):
         self.recordings_list.clear()
