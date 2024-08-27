@@ -26,10 +26,11 @@ class RecordTab(QWidget):
         self.error_label.hide() 
 
         self.record_all_checkbox = QCheckBox("Record Mouse Movement")
-
-        self.delay_input = QSpinBox()
-        self.delay_input.setMinimum(0)
-        self.delay_input.setMaximum(60)
+        
+        initial_delay = SettingsManager.get_setting("initial_delay")
+        self.initial_delay_input = QSpinBox()
+        self.initial_delay_input.setMinimum(initial_delay["start"])
+        self.initial_delay_input.setMaximum(initial_delay["end"])
 
         self.start_button = QPushButton("Start Recording")
         self.start_button.clicked.connect(self.start_recording)
@@ -44,7 +45,7 @@ class RecordTab(QWidget):
         left_column_layout.addWidget(self.error_label)
         left_column_layout.addWidget(self.record_all_checkbox)
         left_column_layout.addWidget(QLabel("Delay (seconds):"))
-        left_column_layout.addWidget(self.delay_input)
+        left_column_layout.addWidget(self.initial_delay_input)
         left_column_layout.addWidget(self.start_button)
         left_column_layout.addWidget(self.stop_button)
 
@@ -72,14 +73,14 @@ class RecordTab(QWidget):
 
         name_of_recording = self.name_input.text()
         record_all = self.record_all_checkbox.isChecked()
-        delay = self.delay_input.value()
+        inital_delay = self.initial_delay_input.value()
 
         if name_of_recording == "":
             self.end_recording()
             self.error_label.show()
             return
 
-        self.event_listener = EventRecorder(name_of_recording, record_all, delay, self.recordings_path)
+        self.event_listener = EventRecorder(name_of_recording, record_all, inital_delay, self.recordings_path)
         self.event_listener.event_signal.connect(self.update_console)
         self.event_listener.finished.connect(self.end_recording)
         self.event_listener.start()
