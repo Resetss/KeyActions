@@ -1,4 +1,3 @@
-# LuminaActions class
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTabWidget
 from PyQt5.QtCore import QTimer
 from pynput import keyboard
@@ -10,7 +9,6 @@ from play_tab import PlayTab
 from manage_tab import ManageTab
 from sequence_tab import SequenceTab
 from settings_tab import SettingsTab
-
 
 class LuminaActions(QWidget):
     def __init__(self):
@@ -52,28 +50,45 @@ class LuminaActions(QWidget):
             self.stylesheet_timer.timeout.connect(self.apply_dark_theme)
             self.stylesheet_timer.start(1000)
 
-        # Register global hotkeys
-        self.register_global_hotkeys()
+        self.register_hotkeys()
 
-    def register_global_hotkeys(self):
+    def register_hotkeys(self):
+        self.start_recording_key = SettingsManager.get_setting("start_recording").lower()
+        self.stop_recording_key = SettingsManager.get_setting("stop_recording").lower()        
         self.start_playing_key = SettingsManager.get_setting("start_playing").lower()
         self.stop_playing_key = SettingsManager.get_setting("stop_playing").lower()
 
-        self.listener = keyboard.Listener(on_press=self.on_press)
+    def register_global_hotkeys(self):
+        self.listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
         self.listener.start()
 
     def on_press(self, key):
-        _key = str(key).replace("Key.", "")
+        current_key = str(key).replace("Key.", "")
         current_tab_index = self.tabs.currentIndex()
         current_tab_name = self.tabs.tabText(current_tab_index)
 
         if current_tab_name == "Play":
-            if _key == self.start_playing_key:
+            if current_key == self.start_playing_key:
                 self.play_tab.play_recording()
-            elif _key == self.stop_playing_key:
+            elif current_key == self.stop_playing_key:
                 self.play_tab.stop_playing()
+        
+        if current_tab_name == "Record":
+            if current_key == self.stop_recording_key:
+                self.record_tab.stop_recording()
+
+    def on_release(self, key):        
+        current_key = str(key).replace("Key.", "")
+        current_tab_index = self.tabs.currentIndex()
+        current_tab_name = self.tabs.tabText(current_tab_index)
+
+        if current_tab_name == "Record":
+            if current_key == self.start_recording_key:
+                self.record_tab.start_recording()
 
     def on_tab_changed(self, index):
+        self.register_global_hotkeys()
+
         if self.tabs.tabText(index) == "Play":
             self.play_tab.refresh_recordings_list()
         elif self.tabs.tabText(index) == "Manage Recordings":

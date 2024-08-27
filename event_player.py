@@ -6,12 +6,10 @@ from pynput.mouse import Button, Controller as MouseController
 from pynput.keyboard import Key, Controller as KeyboardController
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from pynput import keyboard
-
 class EventPlayer(QThread):
     
     event_signal = pyqtSignal(str)
-     
+
     def __init__(self, recordings_list, number_of_plays, initial_delay=0, intermediate_delay=0, recordings_path='data'):
         super().__init__()
 
