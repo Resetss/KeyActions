@@ -15,6 +15,7 @@ class SettingsTab(QWidget):
         self.load_settings() 
         
         self.error_display = QLabel()
+        self.error_display.setStyleSheet("color: red;")
         self.error_display.hide() 
  
         self.save_button = QPushButton("Save Settings")
@@ -66,7 +67,7 @@ class SettingsTab(QWidget):
             stop_recording = "Key." + stop_recording
         if EventManager.is_special_key("Key." + start_playing):
             start_playing = "Key." + start_playing
-        if EventManager.is_special_key("Key." + start_recording):
+        if EventManager.is_special_key("Key." + stop_playing):
             stop_playing = "Key." + stop_playing
 
         settings = {

@@ -54,37 +54,35 @@ class LuminaActions(QWidget):
         self.register_listner() 
 
     def register_hotkeys(self):
-        self.start_recording_key = SettingsManager.get_setting("start_recording").lower()
-        self.stop_recording_key = SettingsManager.get_setting("stop_recording").lower()        
-        self.start_playing_key = SettingsManager.get_setting("start_playing").lower()
-        self.stop_playing_key = SettingsManager.get_setting("stop_playing").lower()
+        self.start_recording_key = SettingsManager.get_setting("start_recording")
+        self.stop_recording_key = SettingsManager.get_setting("stop_recording")        
+        self.start_playing_key = SettingsManager.get_setting("start_playing")
+        self.stop_playing_key = SettingsManager.get_setting("stop_playing")
 
     def register_listner(self): 
         self.listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
         self.listener.start()
 
     def on_press(self, key):
-        current_key = str(key).replace("Key.", "")
         current_tab_index = self.tabs.currentIndex()
         current_tab_name = self.tabs.tabText(current_tab_index)
-
+        
         if current_tab_name == "Play":
-            if current_key == self.start_playing_key:
+            if str(key) == self.start_playing_key:
                 self.play_tab.play_recording()
-            elif current_key == self.stop_playing_key:
+            elif str(key) == self.stop_playing_key:
                 self.play_tab.stop_playing()
         
         if current_tab_name == "Record":
-            if current_key == self.stop_recording_key:
+            if str(key) == self.stop_recording_key:
                 self.record_tab.stop_recording()
 
     def on_release(self, key):        
-        current_key = str(key).replace("Key.", "")
         current_tab_index = self.tabs.currentIndex()
         current_tab_name = self.tabs.tabText(current_tab_index)
 
         if current_tab_name == "Record":
-            if current_key == self.start_recording_key:
+            if str(key) == self.start_recording_key:
                 self.record_tab.start_recording()
 
     def on_tab_changed(self, index):
