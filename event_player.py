@@ -13,14 +13,28 @@ class EventPlayer(QThread):
 
     event_signal = pyqtSignal(str)
 
-    def __init__(self, recordings_list, play_count, initial_delay_seconds=0, intermediate_delay_seconds=0, recordings_path='data'):
+    def __init__(self, filename, play_count, initial_delay_seconds=0, intermediate_delay_seconds=0, recordings_path='data'):
         super().__init__()
 
         self.recordings = []
-        for recording_name in recordings_list:
-            file_path = os.path.join(recordings_path, recording_name)
+
+        if filename.endswith(".rec"):
+            # Load a single recording file
+            file_path = os.path.join(recordings_path, filename)
             with open(file_path) as json_file:
-                self.recordings.append((recording_name, json.load(json_file)))
+                self.recordings.append(('file', json.load(json_file)))
+        else:
+            # Load a sequence file
+            file_path = os.path.join(recordings_path, filename)
+            with open(file_path) as seq_file:
+                sequence = json.load(seq_file)
+                for event in sequence:
+                    if event["type"] == "file":
+                        recording_path = os.path.join(recordings_path, event["filename"])
+                        with open(recording_path) as json_file:
+                            self.recordings.append(('file', json.load(json_file)))
+                    elif event["type"] == "delay":
+                        self.recordings.append(('delay', event["delay"]))
 
         self.play_count = play_count
         self.initial_delay_seconds = initial_delay_seconds
@@ -32,24 +46,31 @@ class EventPlayer(QThread):
         mouse = MouseController()
         keyboard = KeyboardController()
 
-        for recording_name, events in self.recordings:
-            self.handle_initial_delay()
-
-            self.event_signal.emit(f"Start Playing: {recording_name}")
-
-            for current_play in range(self.play_count):
-                self.event_signal.emit(f"Play {current_play + 1} out of {self.play_count}")
-
-                for index, event in enumerate(events):
-                    if self.stop_event_player:
-                        return
-
-                    self.handle_event(event, index, events, mouse, keyboard)
-
-                if self.intermediate_delay_seconds > 0 and current_play + 1 != self.play_count:
-                    self.handle_delay(self.intermediate_delay_seconds, "Next play in")
+        for item_type, content in self.recordings:
+            if item_type == 'file':
+                self.play_recording(content, mouse, keyboard)
+            elif item_type == 'delay':
+                self.handle_delay(content, "Next sequence in")
 
         self.event_signal.emit("End Playing")
+
+    def play_recording(self, events, mouse, keyboard):
+        """Handles the playback of a recording."""
+        self.handle_initial_delay()
+
+        self.event_signal.emit(f"Start Playing: Recording")
+
+        for current_play in range(self.play_count):
+            self.event_signal.emit(f"Play {current_play + 1} out of {self.play_count}")
+
+            for index, event in enumerate(events):
+                if self.stop_event_player:
+                    return
+
+                self.handle_event(event, index, events, mouse, keyboard)
+
+            if self.intermediate_delay_seconds > 0 and current_play + 1 != self.play_count:
+                self.handle_delay(self.intermediate_delay_seconds, "Next play in")
 
     def handle_event(self, event, index, events, mouse, keyboard):
         """Processes a single event."""
@@ -136,10 +157,10 @@ class EventPlayer(QThread):
         time_formatted = time.strftime('%H:%M:%S', time.localtime(event['time']))
         self.event_signal.emit(f"Action: {event['action']} | Key: {event['key']} | Time: {time_formatted}")
 
-    def emit_scroll_event(self, obj):         
-        time_data = time.localtime(obj['time'])
-        time_formatted = time.strftime('%H:%M:%S', time_data)
-        self.event_signal.emit(f"Action: {obj['action']} | dx: {obj['vertical_direction']}, dy: {obj['horizontal_direction']} | Time: {time_formatted}")
+    def emit_scroll_event(self, event):         
+        """Emits a signal for scroll events."""
+        time_formatted = time.strftime('%H:%M:%S', time.localtime(event['time']))
+        self.event_signal.emit(f"Action: {event['action']} | dx: {event['vertical_direction']}, dy: {event['horizontal_direction']} | Time: {time_formatted}")
 
     def stop(self):
         """Stops the event player."""

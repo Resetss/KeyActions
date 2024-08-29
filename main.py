@@ -1,7 +1,5 @@
 import sys
 
-import time
-
 from lumina_actions import LuminaActions
 from PyQt5.QtWidgets import QApplication
 

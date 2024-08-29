@@ -20,27 +20,25 @@ class LuminaActions(QWidget):
         self.setWindowTitle("Lumina Actions")
         self.setGeometry(100, 100, dimensions["width"], dimensions["height"])
 
-        # Main Layout
-        layout = QVBoxLayout()
+        lumina_actions = QVBoxLayout()
 
-        # Tabs
         self.tabs = QTabWidget()
         self.tabs.currentChanged.connect(self.on_tab_changed)
 
         self.record_tab = RecordTab()
         self.play_tab = PlayTab()
-        self.manage_tab = ManageTab()
         self.sequence_tab = SequenceTab()
+        self.manage_tab = ManageTab()
         self.settings_tab = SettingsTab()
 
         self.tabs.addTab(self.record_tab, "Record")
         self.tabs.addTab(self.play_tab, "Play")
-        self.tabs.addTab(self.manage_tab, "Manage Recordings")
         self.tabs.addTab(self.sequence_tab, "Sequences")
+        self.tabs.addTab(self.manage_tab, "Manage Recordings")
         self.tabs.addTab(self.settings_tab, "Settings")
 
-        layout.addWidget(self.tabs)
-        self.setLayout(layout)
+        lumina_actions.addWidget(self.tabs)
+        self.setLayout(lumina_actions)
 
         self.apply_dark_theme()
 
@@ -90,8 +88,10 @@ class LuminaActions(QWidget):
 
         if self.tabs.tabText(index) == "Play":
             self.play_tab.refresh_recordings_list()
-        elif self.tabs.tabText(index) == "Manage Recordings":
+        if self.tabs.tabText(index) == "Manage Recordings":
             self.manage_tab.refresh_recordings_list()
+        if self.tabs.tabText(index) == "Sequences": 
+            self.sequence_tab.refresh_recordings_list() 
 
     def apply_dark_theme(self):
         with open('styles/dark.css', 'r') as file:

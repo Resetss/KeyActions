@@ -141,7 +141,7 @@ class EventRecorder(QThread):
     def save_recording(self):
         """Saves the recorded events to a file."""
         recording_path = SettingsManager.get_recordings_folder()
-        full_path = os.path.join(recording_path, f'{self.recording_name}.json')
+        full_path = os.path.join(recording_path, f'{self.recording_name}.rec')
         with open(full_path, 'w') as outfile:
             json.dump(self.recording_events, outfile)
 

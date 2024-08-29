@@ -70,12 +70,11 @@ class PlayTab(QWidget):
         selected_item = self.recordings_list.currentItem()
 
         if selected_item:
-            recordings_list = [selected_item.text()]
             number_of_plays = self.number_of_plays_input.value()
             inital_delay = self.initial_delay_input.value()
             intermediate_delay = self.intermediate_delay_input.value()
 
-            self.event_player = EventPlayer(recordings_list, number_of_plays, inital_delay, intermediate_delay, self.recordings_path)
+            self.event_player = EventPlayer(selected_item.text(), number_of_plays, inital_delay, intermediate_delay, self.recordings_path)
             self.event_player.event_signal.connect(self.update_console)
             self.event_player.finished.connect(self.play_ended)
             self.event_player.start()
@@ -91,7 +90,7 @@ class PlayTab(QWidget):
     def refresh_recordings_list(self):
         self.recordings_list.clear()
         self.recordings_path = SettingsManager.get_recordings_folder()
-        recordings = [filename for filename in os.listdir(self.recordings_path) if filename.endswith('.json')]
+        recordings = [filename for filename in os.listdir(self.recordings_path) if filename.endswith('.rec') or filename.endswith('.seq')]
         self.recordings_list.addItems(recordings)
 
     def update_console(self, event):

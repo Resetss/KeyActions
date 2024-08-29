@@ -28,7 +28,7 @@ class ManageTab(QWidget):
 
     def refresh_recordings_list(self):
         self.recordings_list.clear()
-        recordings = [filename for filename in os.listdir(self.recordings_path) if filename.endswith('.json')]
+        recordings = [filename for filename in os.listdir(self.recordings_path) if filename.endswith('.rec') or filename.endswith(".seq")]
         self.recordings_list.addItems(recordings)
 
     def delete_selected_recording(self):
