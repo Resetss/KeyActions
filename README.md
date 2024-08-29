@@ -28,7 +28,7 @@ Lumina Actions is a keyboard and mouse recorder and player. Recordings can be st
     ```
     * PyQT
     ```sh
-    pip install pyqt
+    pip install pyqt5
     ```
 ### Running the App
 
