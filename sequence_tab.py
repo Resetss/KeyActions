@@ -1,7 +1,6 @@
 import os
 import json
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QListWidget, QLineEdit, QSpinBox
-from PyQt5.QtCore import Qt
 
 from settings_manager import SettingsManager
 
