@@ -11,7 +11,7 @@ class ManageTab(QWidget):
         super().__init__()
 
         documents_path = os.path.join(os.path.expanduser('~'), 'Documents')
-        appdata_path = os.path.join(documents_path, 'LuminaAction')
+        appdata_path = os.path.join(documents_path, 'KeyActions')
         self.recordings_path = os.path.join(appdata_path, 'recordings')
 
         layout = QVBoxLayout()

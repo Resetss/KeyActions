@@ -1,6 +1,6 @@
-# Lumina Actions
+# Key Actions
 
-Lumina Actions is a keyboard and mouse recorder and player. Recordings can be strung together with delay into "sequnces" to allow users to build more complicated macros with ease.  
+Key Actions is a keyboard and mouse recorder and player. Recordings can be strung together with delay into "sequnces" to allow users to build more complicated macros with ease.  
 
 ## Gettings Started
 
@@ -8,7 +8,7 @@ Lumina Actions is a keyboard and mouse recorder and player. Recordings can be st
  
  1. Clone the repo. 
     ```sh
-    git clone https://github.com/Resetss/LuminaActions.git
+    git clone https://github.com/Resetss/LeyActions.git
     ```
     Alternatively, <> Code -> Download ZIP 
 

@@ -10,17 +10,17 @@ from manage_tab import ManageTab
 from sequence_tab import SequenceTab
 from settings_tab import SettingsTab
 
-class LuminaActions(QWidget):
+class KeyActions(QWidget):
     def __init__(self):
         super().__init__()
 
         SettingsManager.initialize_settings()
 
         dimensions = SettingsManager.get_window_sizes()
-        self.setWindowTitle("Lumina Actions")
+        self.setWindowTitle("Key Actions")
         self.setGeometry(100, 100, dimensions["width"], dimensions["height"])
 
-        lumina_actions = QVBoxLayout()
+        key_actions = QVBoxLayout()
 
         self.tabs = QTabWidget()
         self.tabs.currentChanged.connect(self.on_tab_changed)
@@ -37,8 +37,8 @@ class LuminaActions(QWidget):
         self.tabs.addTab(self.manage_tab, "Manage Recordings")
         self.tabs.addTab(self.settings_tab, "Settings")
 
-        lumina_actions.addWidget(self.tabs)
-        self.setLayout(lumina_actions)
+        key_actions.addWidget(self.tabs)
+        self.setLayout(key_actions)
 
         self.apply_dark_theme()
 

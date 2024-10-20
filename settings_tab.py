@@ -92,5 +92,3 @@ class SettingsTab(QWidget):
     def reset_settings(self):
         SettingsManager.save_settings(SettingsManager.DEFAULT_SETTINGS)
         self.load_settings()
-
-  

@@ -4,8 +4,8 @@ import json
 from event_manager import EventManager
 
 class SettingsManager:
-    SETTINGS_FILE_PATH = os.path.join(os.path.expanduser('~'), 'Documents', 'LuminaAction', 'settings.json')
-    RECORDINGS_FILE_PATH = os.path.join(os.path.expanduser('~'), 'Documents', 'LuminaAction', 'recordings')
+    SETTINGS_FILE_PATH = os.path.join(os.path.expanduser('~'), 'Documents', 'KeyActions', 'settings.json')
+    RECORDINGS_FILE_PATH = os.path.join(os.path.expanduser('~'), 'Documents', 'KeyActions', 'recordings')
     
     START_RECORDING = "Key.f9"
     STOP_RECORDING = "Key.f10"
@@ -43,6 +43,9 @@ class SettingsManager:
                 if key not in settings:
                     settings[key] = value
             cls.save_settings(settings)
+
+        if not os.path.exists(cls.RECORDINGS_FILE_PATH):
+            os.makedirs(cls.RECORDINGS_FILE_PATH, exist_ok=True)
 
     @classmethod
     def load_settings(cls):
